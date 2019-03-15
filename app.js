@@ -14,7 +14,7 @@ app.listen(port);
 
 
 axios.defaults.baseURL = "https://api.travis-ci.org/repo/";
-axios.defaults.headers.common["Authorization"] = "token VmpqBclkPp3WSz82L8Ammw";
+axios.defaults.headers.common["Authorization"] = process.env.TRAVIS_TOKEN;
 axios.defaults.headers.common["Travis-API-Version"] = "3";
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
@@ -49,7 +49,7 @@ schedule.scheduleJob({ hour: [0,12, 18], minute:[0,31], dayOfWeek: [new schedule
     axios.get('https://api.github.com/repos/centralizedinc/'+app+'/contents/package.json',
     {headers:{
       "Content-Type": "application/json",
-      "Authorization":"token 7d05191b05aadd1d73897af8adbc852fe918f9be",
+      "Authorization": process.env.GITHUB_TOKEN,
       "Accept":"application/vnd.github.v3+json"
     }})
     .then(result=>{
@@ -70,7 +70,7 @@ schedule.scheduleJob({ hour: [0,12, 18], minute:[0,31], dayOfWeek: [new schedule
               "sha": sha},
               {headers:{
                 "Content-Type": "application/json",
-                "Authorization":"token 7d05191b05aadd1d73897af8adbc852fe918f9be",
+                "Authorization": process.env.GITHUB_TOKEN,
                 "Accept":"application/vnd.github.v3+json"
               }})
               .then(result=>{
