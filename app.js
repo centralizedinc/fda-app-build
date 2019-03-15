@@ -2,6 +2,16 @@ const schedule = require("node-schedule");
 const path = require("path");
 const axios = require("axios");
 var cmd=require('node-cmd');
+var express = require('express');
+var port = process.env.PORT || 5000;
+var app = express();
+
+app.get("/test", (req, res)=>{
+  res.sendStatus(200);
+})  
+
+app.listen(port);
+
 
 axios.defaults.baseURL = "https://api.travis-ci.org/repo/";
 axios.defaults.headers.common["Authorization"] = "token VmpqBclkPp3WSz82L8Ammw";
