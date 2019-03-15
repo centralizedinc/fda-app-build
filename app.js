@@ -32,6 +32,8 @@ var count=0;
 var fs   = require('fs') 
 var apps = ['fda-admin-portal', 'fda-approver-portal', 'fda-client-portal', 'fda-encoder-portal']
 
+console.log('DATE: ' + new Date())
+
 schedule.scheduleJob({ hour: [0,12, 18], minute:[0,10], dayOfWeek: [new schedule.Range(0, 6)] },() => {
   apps.forEach(app=>{
     axios.get('https://api.github.com/repos/centralizedinc/'+app+'/contents/package.json',
