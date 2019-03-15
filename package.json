@@ -1,0 +1,31 @@
+{
+  "name": "fda-app-build",
+  "version": "1.0.0",
+  "description": "utility for nightly build for FDA 3.0 Applications",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js", 
+    "patch-apps": "npm run patch-admin && npm run patch-approver && npm run patch-client && npm run patch-encoder",
+    "patch-encoder":"cd apps/fda-encoder-portal && git pull && date >> .build-log && npm run push",
+    "patch-admin":"cd apps/fda-admin-portal && git pull && date >> .build-log && npm run push",
+    "patch-approver":"cd apps/fda-approver-portal && git pull && date >> .build-log && npm run push",
+    "patch-client":"cd apps/fda-client-portal && git pull && date >> .build-log && npm run push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/centralizedinc/fda-app-build.git"
+  },
+  "author": "abalita@centralizedinc.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/centralizedinc/fda-app-build/issues"
+  },
+  "homepage": "https://github.com/centralizedinc/fda-app-build#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.4",
+    "node-cmd": "^3.0.0",
+    "node-schedule": "^1.3.2"
+  }
+}
