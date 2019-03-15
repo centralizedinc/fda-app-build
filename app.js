@@ -49,7 +49,7 @@ schedule.scheduleJob({ hour: [0,12, 18], minute:[0,31], dayOfWeek: [new schedule
     axios.get('https://api.github.com/repos/centralizedinc/'+app+'/contents/package.json',
     {headers:{
       "Content-Type": "application/json",
-      "Authorization":"token de1b3711927b3d72c55de98df772ffa95b6b93ed",
+      "Authorization":"token 7d05191b05aadd1d73897af8adbc852fe918f9be",
       "Accept":"application/vnd.github.v3+json"
     }})
     .then(result=>{
@@ -70,7 +70,7 @@ schedule.scheduleJob({ hour: [0,12, 18], minute:[0,31], dayOfWeek: [new schedule
               "sha": sha},
               {headers:{
                 "Content-Type": "application/json",
-                "Authorization":"token de1b3711927b3d72c55de98df772ffa95b6b93ed",
+                "Authorization":"token 7d05191b05aadd1d73897af8adbc852fe918f9be",
                 "Accept":"application/vnd.github.v3+json"
               }})
               .then(result=>{
