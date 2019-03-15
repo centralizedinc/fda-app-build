@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js", 
-    "patch-apps": "cd apps/ && git clone https://github.com/centralizedinc/fda-approver-portal.git && cd fda-approver-portal && npm run patch-approver",
+    "patch-apps": "cd apps/ && git clone https://github.com/centralizedinc/fda-approver-portal.git && cd fda-approver-portal && date >> .build-log && npm run push",
     "patch-encoder":"cd apps/fda-encoder-portal && git pull && date >> .build-log && npm run push",
     "patch-admin":"cd apps/fda-admin-portal && git pull && date >> .build-log && npm run push",
     "patch-approver":"date >> .build-log && npm run push",
