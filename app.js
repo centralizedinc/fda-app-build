@@ -44,7 +44,7 @@ var apps = ['fda-admin-portal', 'fda-approver-portal', 'fda-client-portal', 'fda
 
 console.log('DATE: ' + new Date())
 
-schedule.scheduleJob({ hour: [0,12], minute:[0], dayOfWeek: [new schedule.Range(1, 5)] },() => {
+schedule.scheduleJob({ hour: 0, minute:0, dayOfWeek: [new schedule.Range(1, 5)] },() => {
   apps.forEach(app=>{
     axios.get('https://api.github.com/repos/centralizedinc/'+app+'/contents/package.json',
     {headers:{
