@@ -174,6 +174,6 @@ app.get("/build", (req, res) => {
 app.get("/timezone", (req, res) => {
   res.json({
     date: new Date(),
-    timezone: new Date().getTimezoneOffset()
+    timezone: new Date().toLocaleString()
   })
 })
