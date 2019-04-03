@@ -1,14 +1,14 @@
 const schedule = require("node-schedule");
 const path = require("path");
 const axios = require("axios");
-var cmd=require('node-cmd');
+var cmd = require('node-cmd');
 var express = require('express');
 var port = process.env.PORT || 5000;
 var app = express();
 
-app.get("/test", (req, res)=>{
+app.get("/test", (req, res) => {
   res.sendStatus(200);
-})  
+})
 
 app.listen(port);
 
@@ -24,9 +24,9 @@ var config = {
     config: {
       merge_mode: "merge",
       notifications: {
-        email:[
-          'markjhonpaul.quijom@gmail.com', 
-          'abalita@centralizedinc.com',    
+        email: [
+          'markjhonpaul.quijom@gmail.com',
+          'abalita@centralizedinc.com',
           'blitzkris24@gmail.com',
           'godofuri76@gmail.com',
           'fquiocho@centralizedinc.com',
@@ -38,44 +38,57 @@ var config = {
   }
 };
 
-var count=0;
-var fs   = require('fs') 
+var count = 0;
+var fs = require('fs')
 var apps = ['fda-admin-portal', 'fda-approver-portal', 'fda-client-portal', 'fda-encoder-portal']
 
 console.log('DATE: ' + new Date())
 
-schedule.scheduleJob({ hour: 0, minute:0, dayOfWeek: [new schedule.Range(1, 5)] },() => {
-  apps.forEach(app=>{
-    axios.get('https://api.github.com/repos/centralizedinc/'+app+'/contents/package.json',
-    {headers:{
-      "Content-Type": "application/json",
-      "Authorization": process.env.GITHUB_TOKEN,
-      "Accept":"application/vnd.github.v3+json"
-    }})
-    .then(result=>{
-      var sha = result.data.sha;
-      fs.writeFile(path.resolve(__dirname, './apps/'+app+'/package.json'), result.data.content, {encoding: 'base64'}, function(err) {
-        cmd.get('npm run ' + app,function (err, data, stderr){
-          console.log(data)
-          axios.put('https://api.github.com/repos/centralizedinc/'+app+'/contents/package.json',
-            
-            {
-              "branch":"master",
-              "message": "update version",
-              "committer": {
-                "name": "CCCI Inc.",
-                "email": "abalita@centralizedinc.com"
-              },
-              "content": fs.readFileSync(path.resolve(__dirname, './apps/'+app+'/package.json')).toString('base64'),
-              "sha": sha},
-              {headers:{
-                "Content-Type": "application/json",
-                "Authorization": process.env.GITHUB_TOKEN,
-                "Accept":"application/vnd.github.v3+json"
-              }})
-              .then(result=>{
+schedule.scheduleJob({
+  hour: 0,
+  minute: 0,
+  dayOfWeek: [new schedule.Range(1, 5)]
+}, () => {
+  runBuild()
+});
+
+function runBuild() {
+  apps.forEach(app => {
+    axios.get('https://api.github.com/repos/centralizedinc/' + app + '/contents/package.json', {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": process.env.GITHUB_TOKEN,
+          "Accept": "application/vnd.github.v3+json"
+        }
+      })
+      .then(result => {
+        var sha = result.data.sha;
+        fs.writeFile(path.resolve(__dirname, './apps/' + app + '/package.json'), result.data.content, {
+          encoding: 'base64'
+        }, function (err) {
+          cmd.get('npm run ' + app, function (err, data, stderr) {
+            console.log(data)
+            axios.put('https://api.github.com/repos/centralizedinc/' + app + '/contents/package.json',
+
+                {
+                  "branch": "master",
+                  "message": "update version",
+                  "committer": {
+                    "name": "CCCI Inc.",
+                    "email": "abalita@centralizedinc.com"
+                  },
+                  "content": fs.readFileSync(path.resolve(__dirname, './apps/' + app + '/package.json')).toString('base64'),
+                  "sha": sha
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": process.env.GITHUB_TOKEN,
+                    "Accept": "application/vnd.github.v3+json"
+                  }
+                })
+              .then(result => {
                 count++;
-                if (count == 3){
+                if (count == 3) {
                   axios.post("centralizedinc%2Ffda-admin-portal/requests", config)
                     .then(result => {
                       console.log("####### ADMIN:" + JSON.stringify(result.data));
@@ -94,15 +107,19 @@ schedule.scheduleJob({ hour: 0, minute:0, dayOfWeek: [new schedule.Range(1, 5)] 
                     });
                 }
               })
-              .catch(err =>{
+              .catch(err => {
                 console.log(err)
               })
           })
         })
-    })      
-    .catch(err =>{
-      console.log(err)
-    })
+      })
+      .catch(err => {
+        console.log(err)
+      })
   })
-  }
-);
+}
+
+app.get('/build', (req, res) => {
+  runBuild()
+  res.sendStatus(200);
+})
